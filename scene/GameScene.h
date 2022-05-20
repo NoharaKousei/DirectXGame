@@ -63,6 +63,6 @@ class GameScene {
 	uint32_t textureHandle_ = 0;
 
 	/// <summary>
-	/// ゲームシーン用
+	// ゲームシーン用
 	/// </summary>
 };
