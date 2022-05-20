@@ -42,6 +42,78 @@ void GameScene::Initialize() {
 	//ライン描画が参照するビュープロジェクションを指定する(アドレス渡し)
 	PrimitiveDrawer::GetInstance()->SetViewProjection(&debugCamera_->GetViewProjection());
 
+	Matrix4 matIdentity;
+	matIdentity.m[0][0] = 1;
+	matIdentity.m[1][1] = 1;
+	matIdentity.m[2][2] = 1;
+	matIdentity.m[3][3] = 1;
+
+	//X,Y,Z方向のスケーリングを設定
+	wolrdTransform_.scale_ = {1,1,1};
+	//スケーリング行列を宣言
+	Matrix4 matScale;
+
+	matScale.m[0][0] = wolrdTransform_.scale_.x;
+	matScale.m[1][1] = wolrdTransform_.scale_.y;
+	matScale.m[2][2] = wolrdTransform_.scale_.z;
+	matScale.m[3][3] = 1;
+
+	wolrdTransform_.matWorld_ = matScale;
+	wolrdTransform_.matWorld_ *= matScale;
+
+	//行列の転送
+	wolrdTransform_.TransferMatrix();
+
+
+	//X,Y,Z軸周りの回転角を指定
+	wolrdTransform_.rotation_ = { 3.14f / 3,3.14f / 3,3.14f / 4 };
+
+	//Z軸回転角行列を宣言
+	Matrix4 matRot;
+	Matrix4 matRotX, matRotY, matRotZ;
+
+	matRotZ.m[0][0] = cos(wolrdTransform_.rotation_.z);
+	matRotZ.m[0][1] = sin(wolrdTransform_.rotation_.z);
+	matRotZ.m[1][0] = -sin(wolrdTransform_.rotation_.z);
+	matRotZ.m[1][1] = cos(wolrdTransform_.rotation_.z);
+	matRotZ.m[2][2] = 1;
+	matRotZ.m[3][3] = 1;
+
+	//X軸回転角行列を宣言
+
+	matRotX.m[1][1] = cos(wolrdTransform_.rotation_.x);
+	matRotX.m[1][2] = sin(wolrdTransform_.rotation_.x);
+	matRotX.m[2][1] = -sin(wolrdTransform_.rotation_.x);
+	matRotX.m[2][2] = cos(wolrdTransform_.rotation_.x);
+	matRotX.m[0][0] = 1;
+	matRotX.m[3][3] = 1;
+
+	//Y軸回転角行列を宣言
+
+	matRotY.m[0][0] = cos(wolrdTransform_.rotation_.y);
+	matRotY.m[2][0] = sin(wolrdTransform_.rotation_.y);
+	matRotY.m[0][2] = -sin(wolrdTransform_.rotation_.y);
+	matRotY.m[2][2] = cos(wolrdTransform_.rotation_.y);
+	matRotY.m[1][1] = 1;
+	matRotY.m[3][3] = 1;
+
+	matRot = matRotZ *= matRotX *= matRotY;
+
+	//X,Y,Z軸周りの平行移動を設定
+	wolrdTransform_.translation_ = { 8.0f,10.0f,8.0f };
+	//平行移動行列を宣言
+	Matrix4 matTrans = MathUtility::Matrix4Identity();
+
+	matTrans.m[3][0] = wolrdTransform_.translation_.x;
+	matTrans.m[3][1] = wolrdTransform_.translation_.y;
+	matTrans.m[3][2] = wolrdTransform_.translation_.z;
+
+	wolrdTransform_.matWorld_ *= matScale;
+	wolrdTransform_.matWorld_ = matTrans;
+
+	wolrdTransform_.matWorld_ *= matRotZ *= matRotX *= matRotY *= matTrans;
+
+	wolrdTransform_.TransferMatrix();
 
 }
 
@@ -107,6 +179,6 @@ void GameScene::Draw() {
 
 
 	//ライン描画が参照するビュープロジェクションを指定する(アドレス渡し)
-	PrimitiveDrawer::GetInstance()->DrawLine3d({0,0,0},{0,0,10},{0,0,1,1});
+	//PrimitiveDrawer::GetInstance()->DrawLine3d({0,0,0},{0,0,10},{0,0,1,1});
 	
 }
