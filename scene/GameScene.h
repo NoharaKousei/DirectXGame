@@ -1,7 +1,6 @@
 ﻿#pragma once
 
 #include "Audio.h"
-#include "DebugCamera.h"
 #include "DebugText.h"
 #include "DirectXCommon.h"
 #include "Input.h"
@@ -11,6 +10,23 @@
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 #include <DirectXMath.h>
+#include "DebugCamera.h"
+
+//パーツID
+enum PartId {
+	kRoot,
+	kSpine,
+	kChest,
+	kHead,
+	kArmL,
+	kArmR,
+	kHip,
+	kLegL,
+	kLegR,
+
+	kNumPartId
+};
+
 
 /// <summary>
 /// ゲームシーン
@@ -18,9 +34,9 @@
 class GameScene {
 
 public: // メンバ関数
-		/// <summary>
-		/// コンストクラタ
-		/// </summary>
+  /// <summary>
+  /// コンストクラタ
+  /// </summary>
 	GameScene();
 
 	/// <summary>
@@ -56,14 +72,12 @@ private: // メンバ変数
 	//デバックカメラ
 	DebugCamera* debugCamera_ = nullptr;
 	//ワールドトランスフォーム
-	WorldTransform worldTransforms_[100];
+	WorldTransform worldTransforms_[kNumPartId];
 	//ビュープロジェクション
 	ViewProjection viewProjection_;
 	//値を表示したい変数
 	int32_t value_ = 0;
 	//カメラ上方向の角度
-	//float viewAngle = 0.0f;
-	/// <summary>
-	/// ゲームシーン用
-	/// </summary>
+	float viewAngle = 0.0f;
+
 };
