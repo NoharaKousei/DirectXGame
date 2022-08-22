@@ -11,6 +11,7 @@
 #include "WorldTransform.h"
 #include <DirectXMath.h>
 #include "DebugCamera.h"
+#include "Player.h"
 
 //パーツID
 enum PartId {
@@ -79,5 +80,7 @@ private: // メンバ変数
 	int32_t value_ = 0;
 	//カメラ上方向の角度
 	float viewAngle = 0.0f;
+	//自キャラ
+	Player* player_ = nullptr;
 
 };
