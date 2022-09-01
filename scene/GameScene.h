@@ -15,14 +15,28 @@
 //パーツID
 enum PartId {
 	kRoot,
-	kSpine,
+	/*kSpine,
 	kChest,
 	kHead,
 	kArmL,
 	kArmR,
 	kHip,
 	kLegL,
-	kLegR,
+	kLegR,*/
+
+	kOver,
+
+	kUe,
+	kSita,
+	kMigi,
+	kHidari,
+	kRoot2,
+	kUe2,
+	kSita2,
+	kMigi2,
+	kHidari2,
+	
+	
 
 	kNumPartId
 };
