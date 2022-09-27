@@ -2,6 +2,9 @@
 #include"PlayerBullet.h"
 #include "Input.h"
 #include "DebugText.h"
+#include<memory>
+#include<list>
+
 
 /// <summary>
 /// 自キャラ
@@ -9,6 +12,7 @@
 class Player
 {
 public:	//メンバー関数
+
 
 /// <summary>
 /// 初期化
@@ -38,6 +42,13 @@ public:	//メンバー関数
 	/// </summary>
 	void Attack();
 
+	/// <summary>
+	///弾 
+	/// </summary>
+	std::list<std::unique_ptr<PlayerBullet>>bullets_;
+
+
+
 private:	//メンバー変数
 	//ワールド変換データ
 	WorldTransform worldTransform_;
@@ -52,5 +63,5 @@ private:	//メンバー変数
 	//デバッグテキスト
 	DebugText* debugText_ = nullptr;
 	//弾
-	PlayerBullet* bullet_ = nullptr;
+	std::unique_ptr<PlayerBullet>bullet_;
 };

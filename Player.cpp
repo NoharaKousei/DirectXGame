@@ -17,19 +17,21 @@ void Player::Rotate(Input* input_, float& y)
 	}
 }
 
+
 //攻撃
 void Player::Attack()
 {
 	if (input_->TriggerKey(DIK_SPACE))
 	{
 		//弾を生成し、初期化
-		PlayerBullet* newBullet = new PlayerBullet();
+		std::unique_ptr<PlayerBullet>newBullet = std::make_unique<PlayerBullet>();
 		newBullet->Initialize(model_, worldTransform_.translation_);
 
 		//弾を登録する
-		bullet_ = newBullet;
+		bullets_.push_back(std::move(newBullet));
 	}
 }
+
 
 void Player::Initialize(Model* model, uint32_t textureHandle) {
 	//NULLポインタチェック
@@ -46,7 +48,8 @@ void Player::Initialize(Model* model, uint32_t textureHandle) {
 	worldTransform_.Initialize();
 }
 
-///
+
+
 void Player::Update() {
 
 	//キャラクターの移動ベクトル
@@ -96,21 +99,28 @@ void Player::Update() {
 	debugText_->Printf("PosX:%f", worldTransform_.translation_.x);
 	debugText_->SetPos(50, 70);
 	debugText_->Printf("PosY:%f", worldTransform_.translation_.y);
+
+
 	//攻撃
 	Attack();
 
+
 	//弾更新
-	if (bullet_) {
-		bullet_->Update();
+	for (std::unique_ptr<PlayerBullet>& bullet : bullets_) {
+		bullet->Update();
 	}
+
+
 }
 
 void Player::Draw(ViewProjection& viewprojection) {
+
 	//3Dモデルを描画
 	model_->Draw(worldTransform_, viewprojection, textureHandle_);
 
 	//弾描画
-	if (bullet_) {
-		bullet_->Draw(viewprojection);
+	for (std::unique_ptr<PlayerBullet>& bullet : bullets_) {
+		bullet->Draw(viewprojection);
 	}
+
 }
