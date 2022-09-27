@@ -1,54 +1,46 @@
 #pragma once
-
-#include "assert.h"
-#include "Audio.h"
-#include "DirectXCommon.h"
-#include "DebugText.h"
+#include"Model.h"
+#include"WorldTransform.h"
 #include "Input.h"
-#include "Model.h"
-#include "SafeDelete.h"
-#include "Sprite.h"
-#include "ViewProjection.h"
-#include "WorldTransform.h"
-#include "DebugCamera.h"
-
+#include "DebugText.h"
 
 
 /// <summary>
-///自キャラ
+/// 自キャラ
 /// </summary>
-class Player {
+class Player
+{
+public:	//メンバー関数
 
-public:
-	/// <summary>
-	///初期化
-	/// </summary>
-	/// <param name= "model">モデル</param>
-	/// <param name= "textureHandle">テクスチャハンドル</param>
-	void Initialize(Model* model, uint32_t textureHandle);
+/// <summary>
+/// 初期化
+/// </summary>
+/// <param name="model">モデル</param>
+/// <param name="textrueHandle">テクスチャハンドル</param>
+	void Initialize(Model* model, uint32_t textrueHandle);
 
 	/// <summary>
-	///更新
+	/// 更新
 	/// </summary>
 	void Update();
 
 	/// <summary>
-	///描画
+	/// 描画
 	/// </summary>
-	/// <param name= "viewProjection">ビュープロジェクション(参照渡し)</param>
+	/// <param name="viewProjection">ビュープロジェクション(参照渡し)</param>
 	void Draw(ViewProjection& viewProjection);
+private:	//メンバー変数
 
-private:
 	//ワールド変換データ
 	WorldTransform worldTransform_;
+	//ビュープロジェクション
+	//ViewProjection viewProjection_;
 	//モデル
 	Model* model_ = nullptr;
-	//テクスチャハンドル
+	//テクスチャ
 	uint32_t textureHandle_ = 0u;
-	//入力処理するため
+	//入力処理
 	Input* input_ = nullptr;
 	//デバッグテキスト
 	DebugText* debugText_ = nullptr;
-	
 };
-

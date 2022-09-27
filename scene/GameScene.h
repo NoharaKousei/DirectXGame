@@ -1,6 +1,4 @@
-﻿#pragma once
-
-#include "Audio.h"
+﻿#include "Audio.h"
 #include "DebugText.h"
 #include "DirectXCommon.h"
 #include "Input.h"
@@ -27,7 +25,6 @@ enum PartId {
 
 	kNumPartId
 };
-
 
 /// <summary>
 /// ゲームシーン
@@ -82,5 +79,4 @@ private: // メンバ変数
 	float viewAngle = 0.0f;
 	//自キャラ
 	Player* player_ = nullptr;
-
 };
