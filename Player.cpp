@@ -1,81 +1,35 @@
 #include"Player.h"
 #include <cassert>
-//05.02
 
 
-//スケーリング行列
-Matrix4 CreateMatScale(Vector3 scale) {
-	Matrix4 matScale;
-	matScale.m[0][0] = scale.x;
-	matScale.m[1][1] = scale.y;
-	matScale.m[2][2] = scale.z;
-	matScale.m[3][3] = 1.0f;
-
-	return matScale;
-}
-//回転行列
-Matrix4 CreateMatRot(Vector3 rotation) {
-	//合成用回転行列を宣言
-	Matrix4 matRot;
-	//各軸用回転行列を宣言
-	Matrix4 matRotX, matRotY, matRotZ;
-
-	matRotZ.m[0][0] = cos(rotation.z);
-	matRotZ.m[0][1] = sin(rotation.z);
-	matRotZ.m[1][0] = -sin(rotation.z);
-	matRotZ.m[1][1] = cos(rotation.z);
-	matRotZ.m[2][2] = 1;
-	matRotZ.m[3][3] = 1;
-
-	matRotX.m[0][0] = 1;
-	matRotX.m[1][1] = cos(rotation.x);
-	matRotX.m[1][2] = sin(rotation.x);
-	matRotX.m[2][1] = -sin(rotation.x);
-	matRotX.m[2][2] = cos(rotation.x);
-	matRotX.m[3][3] = 1;
-
-	matRotY.m[0][0] = cos(rotation.y);
-	matRotY.m[0][2] = -sin(rotation.y);
-	matRotY.m[1][1] = 1;
-	matRotY.m[2][0] = sin(rotation.y);
-	matRotY.m[2][2] = cos(rotation.y);
-	matRotY.m[3][3] = 1;
-
-	//各軸の回転行列を合成
-	matRot = matRotZ;
-	matRot *= matRotX;
-	matRot *= matRotY;
-
-	return matRot;
-}
-//平行移動
-Matrix4 CreateMatTrans(Vector3 translation) {
-	//平行移動を宣言
-	Matrix4 matTrans = MathUtility::Matrix4Identity();
-
-	matTrans.m[0][0] = 1;
-	matTrans.m[1][1] = 1;
-	matTrans.m[2][2] = 1;
-	matTrans.m[3][0] = translation.x;
-	matTrans.m[3][1] = translation.y;
-	matTrans.m[3][2] = translation.z;
-	matTrans.m[3][3] = 1;
-
-	return matTrans;
-}
-//単位行列
-Matrix4 CreateIdentityMatrix()
+//旋回
+void Player::Rotate(Input* input_, float& y)
 {
-	Matrix4 Identity;
-	//単位行列を代入
-	Identity.m[0][0] = 1.0f;
-	Identity.m[1][1] = 1.0f;
-	Identity.m[2][2] = 1.0f;
-	Identity.m[3][3] = 1.0f;
-	return Identity;
+	if (input_->PushKey(DIK_Z))
+	{
+		//Y軸まわりの角度を増加
+		y += 0.03f;
+	}
+	else if (input_->PushKey(DIK_C))
+	{
+		//Y軸まわりの角度を減少
+		y -= 0.03f;
+	}
 }
 
+//攻撃
+void Player::Attack()
+{
+	if (input_->TriggerKey(DIK_SPACE))
+	{
+		//弾を生成し、初期化
+		PlayerBullet* newBullet = new PlayerBullet();
+		newBullet->Initialize(model_, worldTransform_.translation_);
 
+		//弾を登録する
+		bullet_ = newBullet;
+	}
+}
 
 void Player::Initialize(Model* model, uint32_t textureHandle) {
 	//NULLポインタチェック
@@ -92,7 +46,9 @@ void Player::Initialize(Model* model, uint32_t textureHandle) {
 	worldTransform_.Initialize();
 }
 
+///
 void Player::Update() {
+
 	//キャラクターの移動ベクトル
 	Vector3 move = { 0,0,0 };
 	float moveSpeed = 0.1f;
@@ -111,10 +67,17 @@ void Player::Update() {
 	}
 
 	worldTransform_.translation_ += move;
-	worldTransform_.matWorld_ = CreateIdentityMatrix();
-	worldTransform_.matWorld_ *= CreateMatScale(worldTransform_.scale_);
-	worldTransform_.matWorld_ *= CreateMatRot(worldTransform_.rotation_);
-	worldTransform_.matWorld_ *= CreateMatTrans(worldTransform_.translation_);
+	//単位行列
+	worldTransform_.matWorld_ = worldTransform_.CreateIdentityMatrix();
+	//スケーリング行列
+	worldTransform_.matWorld_ *= worldTransform_.CreateMatScale(worldTransform_.scale_);
+	//回転行列
+	worldTransform_.matWorld_ *= worldTransform_.CreateMatRot(worldTransform_.rotation_);
+	//平行移動
+	worldTransform_.matWorld_ *= worldTransform_.CreateMatTrans(worldTransform_.translation_);
+
+	//旋回
+	Rotate(input_, worldTransform_.rotation_.y);
 
 	//移動限界処理
 	const float kMoveLimitX = 20;
@@ -133,9 +96,21 @@ void Player::Update() {
 	debugText_->Printf("PosX:%f", worldTransform_.translation_.x);
 	debugText_->SetPos(50, 70);
 	debugText_->Printf("PosY:%f", worldTransform_.translation_.y);
+	//攻撃
+	Attack();
+
+	//弾更新
+	if (bullet_) {
+		bullet_->Update();
+	}
 }
 
 void Player::Draw(ViewProjection& viewprojection) {
 	//3Dモデルを描画
 	model_->Draw(worldTransform_, viewprojection, textureHandle_);
+
+	//弾描画
+	if (bullet_) {
+		bullet_->Draw(viewprojection);
+	}
 }
