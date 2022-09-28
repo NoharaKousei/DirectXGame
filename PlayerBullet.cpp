@@ -1,7 +1,7 @@
 #include"PlayerBullet.h"
 #include <cassert>
 
-void PlayerBullet::Initialize(Model* model, const Vector3& position)
+void PlayerBullet::Initialize(Model* model, const Vector3& position, const Vector3& velocity)
 {
 	//NULLポインタチェック
 	assert(model);
@@ -15,6 +15,12 @@ void PlayerBullet::Initialize(Model* model, const Vector3& position)
 
 	//引数で受け取った初期座標をセット
 	worldTransform_.translation_ = position;
+
+
+
+	//引数で受け取った速度をメンバ変数に代入
+	velocity_ = velocity;
+
 }
 
 void PlayerBullet::Update()
@@ -30,6 +36,20 @@ void PlayerBullet::Update()
 
 	//行列の転送
 	worldTransform_.TransferMatrix();
+
+	worldTransform_.translation_ += velocity_;
+
+
+
+	//行列の転送
+	worldTransform_.TransferMatrix();
+
+
+
+	//時間経過でデス
+	if (--deathTimer_ <= 0) {
+		isDead_ = true;
+	}
 }
 
 void PlayerBullet::Draw(const ViewProjection& viewProjection)
