@@ -12,6 +12,15 @@ class Enemy
 {
 public:
 
+
+	//行動フェーズ
+	enum class Phase
+	{
+		Approach,	//接近する
+		Leave,		//離脱する
+	};
+
+
 	/// <summary>
 	/// 初期化
 	/// </summary>
@@ -40,6 +49,9 @@ private:
 	uint32_t textureHandle_ = 0u;
 	//速度
 	Vector3 velocity_;
+
+	//フェーズ
+	Phase phase_ = Phase::Approach;
 
 
 };

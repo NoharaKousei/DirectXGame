@@ -1,7 +1,6 @@
 ﻿#pragma once
 
-#include "Vector3.h"
-#include "Matrix4.h"
+#include <DirectXMath.h>
 #include <d3d12.h>
 #include <wrl.h>
 
