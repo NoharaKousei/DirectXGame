@@ -8,6 +8,7 @@
 #include "DebugCamera.h"
 #include <DirectXMath.h>
 #include "Player.h"
+#include "Enemy.h"
 
 
 
@@ -38,6 +39,12 @@ void GameScene::Initialize() {
 	player_ = new Player();
 	//自キャラの初期化
 	player_->Initialize(model_, textureHandle_);
+
+	//敵の生成
+	enemy_ = new Enemy();
+	//敵の初期化
+	enemy_->Initialize(model_, textureHandle_);
+
 
 	//乱数シード
 	std::random_device seed_gen;
@@ -72,6 +79,9 @@ void GameScene::Initialize() {
 
 	//軸方向表示が参照するビュープロジェクションを指定する
 	AxisIndicator::GetInstance()->SetTargetViewProjection(&viewProjection_);
+
+	//敵キャラに自キャラのアドレスを渡す
+	enemy_->SetPlayer(player_);
 
 }
 

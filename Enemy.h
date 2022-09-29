@@ -6,7 +6,8 @@
 #include<memory>
 #include<list>
 
-
+// 自機クラスの前方宣言
+class Player;
 
 /// <summary>
 /// 敵
@@ -16,6 +17,8 @@ class Enemy
 {
 public:
 
+
+	void SetPlayer(Player* player) { player_ = player; }
 
 	//行動フェーズ
 	enum class Phase
@@ -55,6 +58,12 @@ public:
 	static const int kFireInterval = 60;
 
 
+	/// <summary>
+	/// ワールド座標を取得
+	/// </summary>
+	Vector3 GetWorldPosition();
+
+
 private:
 
 	//ワールドトランスフォーム
@@ -65,6 +74,10 @@ private:
 	uint32_t textureHandle_ = 0u;
 	//速度
 	Vector3 velocity_;
+
+	// 自キャラ
+	Player* player_ = nullptr;
+
 
 	//フェーズ
 	Phase phase_ = Phase::Approach;

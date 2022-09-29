@@ -37,6 +37,13 @@ public:	//メンバー関数
 	/// </summary>
 	void Rotate(Input* input_, float& y);
 
+
+	/// <summary>
+	/// ワールド座標を取得
+	/// </summary>
+	Vector3 GetWorldPosition();
+
+
 	/// <summary>
 	/// 攻撃
 	/// </summary>
