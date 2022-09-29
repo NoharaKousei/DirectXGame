@@ -24,6 +24,9 @@ void Enemy::Initialize(Model* model, uint32_t textureHandle) {
 
 	//初期座標をセット
 	worldTransform_.translation_ = move;
+
+	//接近フェーズ初期化
+	AppPhaInitialize();
 }
 
 
@@ -80,6 +83,38 @@ void Enemy::Update()
 }
 
 
+
+void Enemy::Fire()
+{
+	//弾を生成し、初期化
+	std::unique_ptr<EnemyBullet>newBullet = std::make_unique<EnemyBullet>();
+	newBullet->Initialize(model_, worldTransform_.translation_);
+
+
+	//弾を登録する
+	bullets_.push_back(std::move(newBullet));
+
+}
+
+
+
+void Enemy::AppPhaInitialize()
+{
+
+	//発射タイマーカウントダウン
+	shootTimer--;
+
+	//指定の時間に達した
+	if (shootTimer <= 0) {
+
+		//弾を発射
+		Fire();
+		//発射タイマーを初期化
+		shootTimer = kFireInterval;
+
+	}
+
+}
 
 
 void Enemy::Draw(const ViewProjection& viewProjection)

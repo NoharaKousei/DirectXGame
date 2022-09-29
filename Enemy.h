@@ -1,6 +1,10 @@
 #pragma once
 
 #include"Model.h"
+#include"EnemyBullet.h"
+#include<Input.h>
+#include<memory>
+#include<list>
 
 
 
@@ -39,6 +43,18 @@ public:
 	/// </summary>
 	void Draw(const ViewProjection& viewProjection);
 
+	/// <summary>
+	/// 攻撃
+	/// </summary>
+	void Fire();
+
+
+	void AppPhaInitialize();
+
+	//発射間隔
+	static const int kFireInterval = 60;
+
+
 private:
 
 	//ワールドトランスフォーム
@@ -53,5 +69,11 @@ private:
 	//フェーズ
 	Phase phase_ = Phase::Approach;
 
+	//弾
+	std::list < std::unique_ptr< EnemyBullet >> bullets_;
+	//入力処理
+	Input* input_ = nullptr;
+	//発射タイマー
+	int32_t shootTimer = 0;
 
 };
